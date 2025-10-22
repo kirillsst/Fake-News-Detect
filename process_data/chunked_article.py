@@ -1,16 +1,19 @@
-from process_data.article_processor import ArticleProcessor
+from article_processor import ArticleProcessor
 
 class ChunkedArticle(ArticleProcessor):
-    def clean_text(self):
-        print("Nettoyage avancé du texte...")
-        # Implémentation réelle du nettoyage
+    def __init__(self, text, label=None, chunk_size=200, overlap=50):
+        super().__init__(text, label)
+        self.chunk_size = chunk_size
+        self.overlap = overlap
 
-    def split_chunks(self, chunk_size=200, overlap=50):
-        print(f"Découpage du texte en chunks de {chunk_size} mots avec overlap {overlap}")
-        # Implémentation réelle du découpage
-        # self.chunks = [...]
-
-    def generate_embeddings(self):
-        print("Génération des embeddings via Ollama")
-        # Implémentation réelle de la génération d'embeddings
-        # self.embeddings = [...]
+    def chunk_text(self, max_words=None, overlap=None):
+        max_words = max_words or self.chunk_size
+        overlap = overlap or self.overlap
+        words = self.text.split()
+        chunks = []
+        start = 0
+        while start < len(words):
+            end = start + max_words
+            chunks.append(" ".join(words[start:end]))
+            start += max_words - overlap
+        return chunks
