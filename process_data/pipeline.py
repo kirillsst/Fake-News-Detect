@@ -94,7 +94,7 @@ if __name__ == "__main__":
         processed_path=PROCESSED_PATH,
         chunk_size=200,
         overlap=50,
-        lemmatize=True,  #dont use very long!   
+        lemmatize=False,  #dont use very long!   
         remove_stopwords=True
     )
     pipeline.process_all()
