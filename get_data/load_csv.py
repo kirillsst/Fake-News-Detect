@@ -31,7 +31,7 @@ def clean_text(text):
     # Minuscules
     return text.lower().strip()
 
-def chunk_text_overlap(text, max_words=100, overlap=20):
+def chunk_text_overlap(text, max_words=100, overlap=50):
     words = text.split()
     chunks = []
     start = 0
@@ -46,7 +46,7 @@ csv_files = [f for f in os.listdir(RAW_PATH) if f.endswith(".csv")]
 
 for file_name in csv_files:
     file_path = os.path.join(RAW_PATH, file_name)
-    df = pd.read_csv(file_path, encoding='utf-8')  # encodage explicite
+    df = pd.read_csv(file_path, encoding='utf-8') 
     
     # Détection texte
     text_col = None
@@ -65,7 +65,7 @@ for file_name in csv_files:
     for _, row in df.iterrows():
         if not row['clean_text']:
             continue
-        for ch in chunk_text_overlap(row['clean_text'], max_words=100, overlap=20):
+        for ch in chunk_text_overlap(row['clean_text'], max_words=100, overlap=50):
             chunks.append({
                 "title": row.get("title", ""),
                 "subject": row.get("subject", ""),
