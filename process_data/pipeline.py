@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 import spacy
-from preprocessing_article import PreprocessingArticle
-from chunked_article import ChunkedArticle
+from .preprocessing_article import PreprocessingArticle
+from .chunked_article import ChunkedArticle
 
 class ArticlePipeline:
     """
@@ -15,7 +15,7 @@ class ArticlePipeline:
     6. Sauvegarde dans un CSV processed
     """
     def __init__(self, raw_path, processed_path, chunk_size=200, overlap=50,
-                 lemmatize=True):
+                lemmatize=True):
         self.raw_path = raw_path
         self.processed_path = processed_path
         self.chunk_size = chunk_size

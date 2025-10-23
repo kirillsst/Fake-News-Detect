@@ -1,4 +1,4 @@
-from article_processor import ArticleProcessor
+from .article_processor import ArticleProcessor
 
 class ChunkedArticle(ArticleProcessor):
     def __init__(self, text, label=None, chunk_size=200, overlap=50):
