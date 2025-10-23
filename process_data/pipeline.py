@@ -15,13 +15,12 @@ class ArticlePipeline:
     6. Sauvegarde dans un CSV processed
     """
     def __init__(self, raw_path, processed_path, chunk_size=200, overlap=50,
-                 lemmatize=True, remove_stopwords=True):
+                 lemmatize=True):
         self.raw_path = raw_path
         self.processed_path = processed_path
         self.chunk_size = chunk_size
         self.overlap = overlap
         self.lemmatize = lemmatize
-        self.remove_stopwords = remove_stopwords
 
         # Charger le modèle spaCy une seule fois
         if self.lemmatize:
@@ -53,7 +52,6 @@ class ArticlePipeline:
                     text=row['text'],
                     label=row['label'],
                     lemmatize=self.lemmatize,
-                    remove_stopwords=self.remove_stopwords,
                     nlp_model=self.nlp
                 )
                 clean_text = article.clean_text()
@@ -94,7 +92,6 @@ if __name__ == "__main__":
         processed_path=PROCESSED_PATH,
         chunk_size=200,
         overlap=50,
-        lemmatize=False,  #dont use very long!   
-        remove_stopwords=True
+        lemmatize=True,  
     )
     pipeline.process_all()
