@@ -1,7 +1,6 @@
 from chromadb import PersistentClient
 from ollama._client import Client as OllamaClient
 
-# Initialiser le client Ollama
 ollama_client = OllamaClient()
 
 def insert_chunk(chunk_id, text, metadata, persist_dir="./chroma_db"):
@@ -9,7 +8,7 @@ def insert_chunk(chunk_id, text, metadata, persist_dir="./chroma_db"):
     Ajoute un chunk de texte avec ses métadonnées et embeddings dans ChromaDB persistante.
     """
     try:
-        # ✅ Nouveau client compatible Chroma v1.x
+        #  Nouveau client compatible Chroma v1.x
         client = PersistentClient(path=persist_dir)
 
         # Récupération ou création de la collection
