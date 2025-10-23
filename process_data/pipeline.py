@@ -37,7 +37,7 @@ class ArticlePipeline:
             file_path = os.path.join(self.raw_path, file_name)
             print(f"\nTraitement du fichier : {file_name}")
 
-            df = pd.read_csv(file_path)
+            df = PreprocessingArticle.load_csv(file_path)
             df = df.drop_duplicates().fillna("")
 
             # Ajouter la colonne label
@@ -92,6 +92,6 @@ if __name__ == "__main__":
         processed_path=PROCESSED_PATH,
         chunk_size=200,
         overlap=50,
-        lemmatize=True,  
+        lemmatize=True,     
     )
     pipeline.process_all()

@@ -6,11 +6,15 @@ class ChunkedArticle(ArticleProcessor):
         self.chunk_size = chunk_size
         self.overlap = overlap
 
-    def chunk_text(self):
+    def chunk_text(self, max_words=None, overlap=None):
+        max_words = max_words or self.chunk_size
+        overlap = overlap or self.overlap
         words = self.text.split()
         chunks = []
-        for i in range(0, len(words), self.chunk_size - self.overlap):
-            chunk = " ".join(words[i:i+self.chunk_size])
-            if chunk:
-                chunks.append(chunk)
+        start = 0
+        while start < len(words):
+            end = start + max_words
+            chunks.append(" ".join(words[start:end]))
+            start += max_words - overlap
         return chunks
+
