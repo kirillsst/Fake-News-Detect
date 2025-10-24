@@ -1,4 +1,3 @@
-# tests/test_articles.py
 """
 Tests unitaires pour les classes ArticleProcessor, ChunkedArticle et PreprocessingArticle
 en utilisant CSV .
@@ -13,9 +12,9 @@ import spacy
 import warnings
 import os
 
-# -----------------------
+
 # Gestion globale des warnings
-# -----------------------
+
 @pytest.fixture(autouse=True)
 def ignore_warnings():
     """Ignore les warnings de dépréciation dans tous les tests."""
@@ -23,22 +22,22 @@ def ignore_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
         yield
 
-# -----------------------
+
 # Fixture : modèle spaCy
-# -----------------------
+
 @pytest.fixture(scope="module")
 def nlp_model():
     """Charge le modèle anglais complet pour lemmatisation et entités."""
     return spacy.load("en_core_web_sm")
 
-# -----------------------
+
 # Chemin vers CSV réel
-# -----------------------
+
 CSV_PATH = os.path.join(os.path.dirname(__file__), "../data/Fake.csv") 
 
-# -----------------------
+
 # Tests pour ArticleProcessor
-# -----------------------
+
 def test_article_processor_load_csv():
     """Teste la lecture CSV et suppression des doublons."""
     df = ArticleProcessor.load_csv(CSV_PATH)
@@ -58,9 +57,9 @@ def test_article_processor_clean_text():
     article = ArticleProcessor(text="Some text")
     assert article.clean_text() == "Some text"
 
-# -----------------------
+
 # Tests pour ChunkedArticle
-# -----------------------
+
 def test_chunked_article_text():
     """Teste le découpage en chunks avec overlap."""
     text = "one two three four five six seven eight nine ten"
@@ -74,9 +73,9 @@ def test_chunked_article_text():
     # On prend les 3 premiers chunks pour ignorer le dernier éventuel très court
     assert chunks[:3] == expected_chunks
 
-# -----------------------
+
 # Tests pour PreprocessingArticle
-# -----------------------
+
 def test_preprocessing_article_clean_text():
     """Teste le nettoyage du texte depuis le CSV réel."""
     df = pd.read_csv(CSV_PATH)
