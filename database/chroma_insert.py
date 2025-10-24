@@ -1,43 +1,20 @@
-from chromadb import PersistentClient
-from ollama._client import Client as OllamaClient
+# from ollama._client import Client as OllamaClient
+# from .chroma_setup import get_chroma_collection
+# from .chroma_utils import normalize_vector
 
-ollama_client = OllamaClient()
+# ollama_client = OllamaClient()
 
-def insert_chunk(chunk_id, text, metadata, persist_dir="./chroma_db"):
-    """
-    Ajoute un chunk de texte avec ses métadonnées et embeddings dans ChromaDB persistante.
-    """
-    try:
-        #  Nouveau client compatible Chroma v1.x
-        client = PersistentClient(path=persist_dir)
+# def insert_chunk(chunk_id, text, metadata, collection):
+#     try:
+#         embedding_response = ollama_client.embeddings(model="all-minilm", prompt=text)
+#         embedding = normalize_vector(embedding_response["embedding"])
 
-        # Récupération ou création de la collection
-        try:
-            collection = client.get_collection("fake_news_collection")
-        except Exception:
-            collection = client.create_collection("fake_news_collection")
-
-        # Génération de l'embedding via Ollama
-        embedding_response = ollama_client.embeddings(model="all-minilm", prompt=text)
-        embedding = embedding_response["embedding"]
-
-        # Ajout dans la collection
-        collection.add(
-            ids=[chunk_id],
-            documents=[text],
-            embeddings=[embedding],
-            metadatas=[metadata]
-        )
-
-        print(f" Chunk {chunk_id} ajouté et sauvegardé dans la collection.")
-
-    except Exception as e:
-        print(f" Erreur lors de l'ajout du chunk {chunk_id} : {e}")
-
-
-if __name__ == "__main__":
-    insert_chunk(
-        chunk_id="1",
-        text="Le gouvernement a annoncé de nouvelles mesures sanitaires.",
-        metadata={"source": "lemonde.fr", "date": "2025-10-20"}
-    )
+#         collection.add(
+#             ids=[chunk_id],
+#             documents=[text],
+#             embeddings=[embedding],
+#             metadatas=[metadata]
+#         )
+#         print(f" Chunk {chunk_id} ajouté.")
+#     except Exception as e:
+#         print(f" Erreur avec le chunk {chunk_id} : {e}")

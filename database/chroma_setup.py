@@ -1,20 +1,18 @@
-import chromadb
-from chromadb.config import Settings
+from chromadb import PersistentClient
 
-# Création du client ChromaDB
-client = chromadb.Client(Settings(
-    chroma_db_impl="duckdb+parquet",
-    persist_directory="./chroma_db"
-))
+def get_chroma_collection(collection_name="fake_news_collection", persist_dir="./chroma_db"):
+    # Création du client persistant
+    client = PersistentClient(path=persist_dir)
 
-# Nom de la collection
-collection_name = "fake_news_collection"
+    try:
+        collection = client.get_collection(name=collection_name)
+        print(f"Collection '{collection_name}' récupérée avec succès !")
+    except Exception:
+        collection = client.create_collection(name=collection_name)
+        print(f"Collection '{collection_name}' créée avec succès !")
 
-# Créer ou récupérer la collection
-try:
-    collection = client.get_collection(name=collection_name)
-    print(f"Collection '{collection_name}' récupérée avec succès !")
-except Exception as e:  # Remplace CollectionNotFoundError
-    print(f"Collection '{collection_name}' non trouvée. Création d'une nouvelle collection...")
-    collection = client.create_collection(name=collection_name)
-    print(f"Collection '{collection_name}' créée avec succès !")
+    return collection
+
+if __name__ == "__main__":
+    collection = get_chroma_collection()
+    print(" Setup terminé")
