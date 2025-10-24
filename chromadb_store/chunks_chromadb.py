@@ -7,14 +7,15 @@ via Ollama, puis les stocke dans une collection ChromaDB avec métadonnees.
 
 import pandas as pd
 import chromadb
+import numpy as np
 from chromadb.utils.embedding_functions import OllamaEmbeddingFunction
 
 
 # =========  1. PARAMÈTRES ==========
-CSV_PATH = "data/articles_chunks.csv"          # chemin vers ichier CSV
+CSV_PATH = "data/articles_chunks.csv"          # chemin vers fichier CSV
 COLLECTION_NAME = "fake_news_chunks"           # nom de la collection Chroma
 EMBEDDING_MODEL = "nomic-embed-text"           # modèle d'embedding Ollama
-
+MAX_ROWS = 50                                 # limiter pour les tests initiaux
 # =========  2. INITIALISATION ==========
 
 # Client local ChromaDB
@@ -35,8 +36,14 @@ sample_df = pd.read_csv(CSV_PATH)
 print(f"{len(sample_df)} lignes chargées.")
 print(sample_df.head(2))
 
+# =========  4. FONCTION DE NORMALISATION ==========
+def normalize_vector(vec):
+    """Normalise un vecteur en norme L2"""
+    vec = np.array(vec)
+    norm = np.linalg.norm(vec)
+    return vec / norm if norm != 0 else vec
 
-# =========  4. AJOUT DES CHUNKS ==========
+# =========  5. AJOUT DES CHUNKS ==========
 print(f"Ajout des chunks dans la collection '{COLLECTION_NAME}'...")
 
 for idx, row in sample_df.iterrows():
