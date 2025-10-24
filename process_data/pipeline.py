@@ -1,8 +1,12 @@
 import os
 import pandas as pd
 import spacy
-from preprocessing_article import PreprocessingArticle
-from chunked_article import ChunkedArticle
+# from preprocessing_article import PreprocessingArticle
+# from chunked_article import ChunkedArticle
+from .chunked_article import ChunkedArticle
+from .preprocessing_article import PreprocessingArticle
+
+
 
 class ArticlePipeline:
     """

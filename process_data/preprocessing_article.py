@@ -2,7 +2,9 @@ import re
 from bs4 import BeautifulSoup
 import unicodedata
 import spacy
-from article_processor import ArticleProcessor
+# from article_processor import ArticleProcessor
+from .article_processor import ArticleProcessor
+
 
 class PreprocessingArticle(ArticleProcessor):
     def __init__(self, text, label=None, lemmatize=True, nlp_model=None, preserve_entities=True):
