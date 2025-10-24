@@ -90,7 +90,7 @@ if __name__ == "__main__":
     pipeline = ArticlePipeline(
         raw_path=RAW_PATH,
         processed_path=PROCESSED_PATH,
-        chunk_size=200,
+        chunk_size=100,
         overlap=50,
         lemmatize=True,     
     )

@@ -1,7 +1,7 @@
 import ollama
 import numpy as np
 
-def chunk_text(text, max_length=1000):
+def chunk_text(text, max_length=500):
     # Divise un texte long en morceaux de longueur fixe
     return [text[i:i + max_length] for i in range(0, len(text), max_length)]
 
