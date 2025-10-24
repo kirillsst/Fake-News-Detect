@@ -2,7 +2,7 @@
 Étape 2 — Stockage des données dans ChromaDB
 --------------------------------------------
 Ce script charge les chunks nettoyés depuis un CSV, génère leurs embeddings
-via Ollama, puis les stocke dans une collection ChromaDB avec métadonnées.
+via Ollama, puis les stocke dans une collection ChromaDB avec métadonnees.
 """
 
 import pandas as pd
