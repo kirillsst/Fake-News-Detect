@@ -1,4 +1,4 @@
-# Recherche de documents similaires dans ChromaDB
+# chroma_retrieval.py : Recherche de documents similaires dans ChromaDB
 
 from chromadb import PersistentClient
 from database.chroma_utils import get_embedding

@@ -1,3 +1,4 @@
+# query_preprocess.py : Prétraitement de la requête utilisateur
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))

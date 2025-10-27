@@ -1,4 +1,4 @@
-# Pipeline principal du système RAG
+# rag_pipeline.py : Pipeline principal du système RAG
 
 from query_preprocess import preprocess_query
 from chroma_retrieval import get_context_from_chroma

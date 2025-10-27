@@ -1,4 +1,4 @@
-# Génération de la réponse finale via Ollama
+# ollama_generation.py Génération de la réponse finale via Ollama
 
 import ollama
 
