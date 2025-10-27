@@ -3,6 +3,7 @@
 from chromadb import PersistentClient
 from database.chroma_utils import get_embedding
 
+CSV_PATH = "data/processed/chunks.csv"
 CHROMA_DB_PATH = "./chroma_db"
 COLLECTION_NAME = "fake_news_collection"
 

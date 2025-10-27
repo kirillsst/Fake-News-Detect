@@ -1,6 +1,6 @@
 from chromadb import PersistentClient
 
-from chroma_utils import get_embedding
+from .chroma_utils import get_embedding
 
 
 
