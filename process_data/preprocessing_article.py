@@ -36,4 +36,3 @@ class PreprocessingArticle(ArticleProcessor):
 
         self.text = " ".join(processed_tokens)
         return self.text
-
