@@ -1,7 +1,8 @@
 # Data
 data/
 .vscode/settings.json
-
+get_data/
+get_data
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

@@ -3,17 +3,17 @@ import numpy as np
 from chromadb import PersistentClient
 from chroma_utils import get_embedding
 
-# ==============================
+
 # Constantes
-# ==============================
+
 CSV_PATH = "data/processed/chunks.csv"               # Chemin vers le CSV contenant les chunks
 PERSIST_DIR = "./chroma_db"           # Dossier pour la base ChromaDB persistante
 COLLECTION_NAME = "fake_news_collection"
 BATCH_SIZE = 50                        # Taille des lots pour l'ajout
 
-# ==============================
+
 # Fonction pour nettoyer les métadonnées
-# ==============================
+
 def clean_metadata(row):
     """
     Remplace les valeurs None par des chaînes vides pour ChromaDB.
@@ -26,9 +26,9 @@ def clean_metadata(row):
     }
     return metadata
 
-# ==============================
+
 # Fonction principale d'ajout par lot
-# ==============================
+
 def add_chunks_to_chroma(df, client, collection_name):
     """
     Ajoute tous les chunks du DataFrame dans ChromaDB en respectant les étapes :
@@ -96,9 +96,9 @@ def add_chunks_to_chroma(df, client, collection_name):
         )
         print(f"[Info] {len(batch_ids)} derniers chunks ajoutés dans la collection.")
 
-# ==============================
+
 # Exécution principale
-# ==============================
+
 if __name__ == "__main__":
     print("[Info] Lecture du CSV...")
     df = pd.read_csv(CSV_PATH)
