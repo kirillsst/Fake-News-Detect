@@ -16,7 +16,7 @@ def normalize_vector(vec):
         return vec
     return vec / norm
 
-def get_embedding(text: str, model: str = "all-minilm", max_words: int = 2000):
+def get_embedding(text: str, model: str = "all-minilm", max_words: int = 100):
     """
     Génère l'embedding via Ollama et le normalise.
     Limite la longueur du texte pour le modèle.
@@ -24,10 +24,10 @@ def get_embedding(text: str, model: str = "all-minilm", max_words: int = 2000):
     try:
         # Limiter le texte par nombre de mots
         words = text.split()
-        if len(words) > max_words:
-            words = words[:max_words]
-            text = " ".join(words)
-            print(f"[Warning] Texte tronqué à {max_words} mots pour l'embedding.")
+        # if len(words) > max_words:
+        #     words = words[:max_words]
+        #     text = " ".join(words)
+        #     print(f"[Warning] Texte tronqué à {max_words} mots pour l'embedding.")
 
         # Appel au modèle Ollama
         response = ollama_client.embeddings(model=model, prompt=text)

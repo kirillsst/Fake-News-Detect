@@ -1,7 +1,9 @@
+from pydoc import text
 import pandas as pd
 import numpy as np
 from chromadb import PersistentClient
 from .chroma_utils import get_embedding
+from database.embeddings import get_embedding
 
 # ==============================
 # Constantes
@@ -57,11 +59,19 @@ def add_chunks_to_chroma(df, client, collection_name):
 
         metadata = clean_metadata(row)
 
+        # # Génération de l'embedding
+        # embedding = get_embedding(text)
+        # if embedding is None:
+        #     print(f"[Warning] Chunk {chunk_id} ignoré : aucun embedding disponible ou texte trop long")
+        #     continue
+        
         # Génération de l'embedding
+        print(f"Chunk {chunk_id} longueur (mots) : {len(text.split())}")  # <-- log longueur
         embedding = get_embedding(text)
         if embedding is None:
             print(f"[Warning] Chunk {chunk_id} ignoré : aucun embedding disponible ou texte trop long")
             continue
+
 
         # Normalisation L2 (optionnelle)
         embedding = np.array(embedding)
