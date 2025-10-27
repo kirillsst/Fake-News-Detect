@@ -18,7 +18,7 @@ def normalize_vector(vec):
         return vec
     return vec / norm
 
-def get_embedding(text: str, model: str = "all-minilm", max_words: int = 500):
+def get_embedding(text: str, model: str = "all-minilm", max_words: int =100):
     """
     Génère l'embedding via Ollama et le normalise.
     Tronque le texte si le nombre de mots dépasse max_words pour éviter les erreurs.
