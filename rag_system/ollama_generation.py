@@ -1,4 +1,3 @@
-# ollama_generation.py
 import ollama
 
 MODEL_NAME = "phi3:mini"

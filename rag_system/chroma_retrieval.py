@@ -1,4 +1,3 @@
-# Recherche de documents similaires dans ChromaDB
 
 from chromadb import PersistentClient
 from database.chroma_utils import get_embedding

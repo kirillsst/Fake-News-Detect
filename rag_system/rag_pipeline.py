@@ -1,4 +1,3 @@
-# rag_pipeline.py (dans rag_system)
 from .query_preprocess import preprocess_query
 from .chroma_retrieval import get_context_from_chroma
 from .ollama_generation import generate_response
