@@ -3,6 +3,10 @@ import pandas as pd
 import spacy
 from .preprocessing_article import PreprocessingArticle
 from .chunked_article import ChunkedArticle
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
+import warnings
+
+warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 
 class ArticlePipeline:
     """
