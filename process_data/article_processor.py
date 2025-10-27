@@ -1,5 +1,5 @@
 import pandas as pd
-from base_article import BaseArticle
+from process_data.base_article import BaseArticle
 
 class ArticleProcessor(BaseArticle):
     """
