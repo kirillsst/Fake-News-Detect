@@ -1,4 +1,7 @@
-from article_processor import ArticleProcessor
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from process_data.article_processor import ArticleProcessor
 
 class ChunkedArticle(ArticleProcessor):
     def __init__(self, text, label=None, chunk_size=100, overlap=50):
