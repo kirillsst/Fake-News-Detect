@@ -1,5 +1,13 @@
 # 📘 Guide de configuration et d’exécution du projet *Fake News Detect*
 
+## ⚙️ 0. Installation des dépendances
+
+Avant de commencer, assurez-vous d’avoir installé et synchronisé toutes les dépendances du projet à l’aide de **uv** :
+
+```bash
+uv sync
+```
+
 ## 1. Chargement des données
 
 Utilisez le lien suivant pour télécharger le jeu de données :  
