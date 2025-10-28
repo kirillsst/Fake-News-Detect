@@ -14,8 +14,9 @@ Your goal is to classify a statement as either TRUE or FAKE based on the provide
 Rules:
 - If the context clearly supports the statement, answer TRUE.
 - If the context contradicts the statement, answer FAKE.
-- If there is no relevant context, answer UNKNOWN.
-- Never guess or invent facts.
+- If the context is insufficient, choose the most likely label (TRUE or FAKE) based on the retrieved context.
+- Never answer UNKNOWN or leave it blank.
+
 
 Output format:
 VERDICT: TRUE or FAKE
