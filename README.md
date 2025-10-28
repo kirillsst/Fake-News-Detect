@@ -2,10 +2,22 @@
 
 ## ⚙️ 0. Installation des dépendances
 
+Il faut créer l'environnement 
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
 Avant de commencer, assurez-vous d’avoir installé et synchronisé toutes les dépendances du projet à l’aide de **uv** :
 
 ```bash
 uv sync
+```
+
+Télécharger le modèle
+
+```bash
+python -m spacy download en_core_web_sm
 ```
 
 ## 1. Chargement des données
