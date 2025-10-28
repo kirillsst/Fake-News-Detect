@@ -1,1 +1,86 @@
-# Fake-News-Detect
+# 📘 Guide de configuration et d’exécution du projet *Fake News Detect*
+
+## 1. Chargement des données
+
+Utilisez le lien suivant pour télécharger le jeu de données :  
+👉 [Fake and Real News Dataset – Kaggle](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset/data)
+
+Après le téléchargement, placez les fichiers dans le répertoire racine du projet :
+___
+
+```bash
+/Fake-News-Detect/
+│
+├── True.csv
+└── Fake.csv
+```
+
+Créez ensuite une structure de dossiers pour organiser vos données :
+
+___
+
+```bash
+/Fake-News-Detect/
+│
+└── data/
+├── raw/
+└── processed/
+```
+
+Pour extraire un nombre spécifique de lignes d’un fichier CSV (par exemple, pour un test rapide), utilisez la commande suivante :
+
+```bash
+head -n <n_lignes> input.csv > data/raw/output.csv
+```
+Remplacez <n_lignes> par le nombre de lignes souhaité.
+
+## 2. Exécution du pipeline de traitement
+Lancez le script suivant pour traiter vos deux fichiers CSV (True.csv et Fake.csv) :
+
+```bash
+python process_data/pipeline.py
+```
+
+Une fois le traitement terminé, un fichier CSV final sera généré dans le dossier :
+
+```bash
+data/processed/
+```
+
+Ce fichier fusionnera les deux sources et contiendra les colonnes suivantes :
+
+| Colonnes         | Description                              |
+| ---------------- | -----------------------------------------|
+| article_id       | Identifiant unique de l’article          |
+| chunk_id         | Identifiant du segment (chunk) de texte  |
+| text             | Contenu textuel de l’article             |
+| label            | Classe de l’article : Fake ou True       |
+
+## 3. Création de la base de données Chroma
+Pour initialiser la base Chroma, exécutez le script suivant :
+```bash
+python database/chroma_setup.py
+```
+
+Ensuite, pour insérer les chunks dans votre collection :
+```bash
+python database/chroma_insert.py
+```
+
+Après l’exécution, vérifiez le contenu de la base de données avec :
+```bash
+python database/check_db.py
+```
+Ce script vous permettra de confirmer le nombre de chunks présents dans la collection.
+
+## 4. Utilisation de l’interface Streamlit
+Une fois la base configurée, vous pouvez lancer l’interface utilisateur avec Streamlit :
+```bash
+streamlit run interface/app.py
+```
+
+Cette interface vous permettra d’entrer un texte et d’obtenir une prédiction au format suivant :
+```bash
+Résultat : Fake ou True
+Explication : Raisonnement du modèle
+```
