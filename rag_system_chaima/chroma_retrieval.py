@@ -2,13 +2,14 @@
 # rag_system_chaima/chroma_retrieval.py
 from chromadb import Client
 from chromadb.utils import embedding_functions
+from chromadb import PersistentClient
 
 def get_client():
     """
-    Crée un client ChromaDB moderne.
-    Le client utilisera la persistance par défaut dans ./chroma_db
+    Crée un client ChromaDB persistant (nouvelle API Chroma >= 0.5).
+    Les données seront sauvegardées dans le dossier ./chroma_db/
     """
-    client = Client()
+    client = PersistentClient(path="./chroma_db")
     return client
 
 def get_collection(collection_name="fake_news_chunks"):
@@ -107,31 +108,3 @@ def add_chunks_to_collection(collection, df_chunks, max_chunk_length=512, batch_
 
     print("✅ Tous les chunks ajoutés (ou ignorés si déjà présents).")
     
-
-# from chromadb import Client
-# from chromadb.config import Settings
-
-# def get_collection(path: str = "./chroma_db", name: str = "fake_news_chunks"):
-#     """Récupérer ou créer la collection ChromaDB"""
-#     settings = Settings(chroma_db_impl="duckdb+parquet", persist_directory=path)
-#     client = Client(settings=settings)
-#     if name in [c.name for c in client.list_collections()]:
-#         return client.get_collection(name=name)
-#     return client.create_collection(name=name)
-
-# def retrieve_chunks(collection, query: str, k: int = 5) -> str:
-#     """
-#     Chercher les k chunks les plus similaires dans ChromaDB
-#     et assembler le contexte avec label + titre + texte
-#     """
-#     results = collection.query(query_texts=[query], n_results=k)
-#     context_chunks = []
-#     metadatas = results["metadatas"][0]
-#     documents = results["documents"][0]
-
-#     for doc, meta in zip(documents, metadatas):
-#         label = meta.get("label", "Unknown")
-#         title = meta.get("title", "")
-#         context_chunks.append(f"[{label}] {title}\n{doc}")
-
-#     return "\n\n".join(context_chunks)
