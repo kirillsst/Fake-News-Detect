@@ -84,3 +84,41 @@ Cette interface vous permettra d’entrer un texte et d’obtenir une prédictio
 Résultat : Fake ou True
 Explication : Raisonnement du modèle
 ```
+## Structure de projet
+
+```bash
+├── README.md
+├── chroma_db
+├── data
+│   ├── processed
+│   │   └── chunks.csv
+│   └── raw
+│       ├── Fake.csv
+│       └── True.csv
+├── database
+│   ├── __init__.py
+│   ├── check_db.py
+│   ├── chroma_insert.py
+│   ├── chroma_pipeline.py
+│   ├── chroma_setup.py
+│   └── chroma_utils.py
+├── interface
+│   └── app.py
+├── notebooks
+│   └── exploration.ipynb
+├── process_data 
+│   ├── article_processor.py
+│   ├── base_article.py
+│   ├── chunked_article.py
+│   ├── pipeline.py
+│   └── preprocessing_article.py
+├── pyproject.toml
+├── rag_system
+│   ├── __init__.py
+│   ├── chroma_retrieval.py
+│   ├── ollama_generation.py
+│   ├── query_preprocess.py
+│   └── rag_pipeline.py
+├── requirements.txt
+└── uv.lock
+```
