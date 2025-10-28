@@ -1,47 +1,122 @@
-# chroma_retrieval.py
+from pydoc import text
+import pandas as pd
+import numpy as np
 from chromadb import PersistentClient
 from .chroma_utils import get_embedding
+from database.embeddings import get_embedding
 
-CHROMA_DB_PATH = "./chroma_db"
+# ==============================
+# Constantes
+# ==============================
+CSV_PATH = "data/processed/chunks.csv"               # Chemin vers le CSV contenant les chunks
+PERSIST_DIR = "./chroma_db"           # Dossier pour la base ChromaDB persistante
 COLLECTION_NAME = "fake_news_collection"
+BATCH_SIZE = 50                        # Taille des lots pour l'ajout
 
-def get_context_from_chroma(user_text: str, n_results: int = 10, max_context_words: int = 500) -> str:
+# ==============================
+# Fonction pour nettoyer les métadonnées
+# ==============================
+def clean_metadata(row):
     """
-    Récupère l'intégration de la requête, recherche les chunks les plus proches et renvoie
-    le contexte combiné, limité en longueur pour le modèle.
-    
-    Args:
-        user_text (str): Texte utilisateur à analyser.
-        n_results (int): Nombre de chunks les plus proches à récupérer.
-        max_context_words (int): Nombre maximum de mots dans le contexte final.
-
-    Returns:
-        str: Contexte combiné des chunks les plus pertinents.
+    Remplace les valeurs None par des chaînes vides pour ChromaDB.
     """
-    # Génération de l'embedding du texte utilisateur
-    query_embedding = get_embedding(user_text)
-    if query_embedding is None:
-        print("[Warning] Impossible de générer l'embedding du texte utilisateur.")
-        return ""
+    metadata = {
+        "label": row.get("label") if row.get("label") is not None else "",
+        "article_id": row.get("article_id") if row.get("article_id") is not None else "",
+        "source": row.get("source") if row.get("source") is not None else "",
+        "date": row.get("date") if row.get("date") is not None else ""
+    }
+    return metadata
 
-    # Connexion à ChromaDB
-    client = PersistentClient(path=CHROMA_DB_PATH)
-    collection = client.get_collection(COLLECTION_NAME)
+# ==============================
+# Fonction principale d'ajout par lot
+# ==============================
+def add_chunks_to_chroma(df, client, collection_name):
+    """
+    Ajoute tous les chunks du DataFrame dans ChromaDB en respectant les étapes :
+    - définition des métadonnées
+    - génération des embeddings
+    - normalisation
+    - ajout à la collection
+    """
+    # Création ou récupération de la collection
+    try:
+        collection = client.get_collection(collection_name)
+    except Exception:
+        collection = client.create_collection(collection_name)
 
-    # Recherche des n chunks les plus proches
-    results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
-    context_chunks = results["documents"][0]  # Liste de textes récupérés
+    # Initialisation des listes pour le batch
+    batch_ids = []
+    batch_texts = []
+    batch_embeddings = []
+    batch_metadatas = []
 
-    if not context_chunks:
-        print("[Info] Aucun chunk pertinent trouvé dans la collection.")
-        return ""
+    for idx, row in df.iterrows():
+        chunk_id = f"{row.get('article_id')}_{row['chunk_id']}"
+        text = row["text"].strip()
+        if not text:
+            continue
 
-    # Concaténer les chunks et limiter le nombre de mots pour le modèle
-    context_text = " ".join(context_chunks)
-    words = context_text.split()
-    if len(words) > max_context_words:
-        context_text = " ".join(words[:max_context_words])
-        print(f"[Info] Contexte tronqué à {max_context_words} mots pour le modèle.")
+        metadata = clean_metadata(row)
 
-    print(f"[Info] {len(context_chunks)} chunks récupérés depuis ChromaDB.")
-    return context_text
+        # # Génération de l'embedding
+        # embedding = get_embedding(text)
+        # if embedding is None:
+        #     print(f"[Warning] Chunk {chunk_id} ignoré : aucun embedding disponible ou texte trop long")
+        #     continue
+        
+        # Génération de l'embedding
+        print(f"Chunk {chunk_id} longueur (mots) : {len(text.split())}")  # <-- log longueur
+        embedding = get_embedding(text)
+        if embedding is None:
+            print(f"[Warning] Chunk {chunk_id} ignoré : aucun embedding disponible ou texte trop long")
+            continue
+
+
+        # Normalisation L2 (optionnelle)
+        embedding = np.array(embedding)
+        norm = np.linalg.norm(embedding)
+        if norm > 0:
+            embedding = (embedding / norm).tolist()
+
+        # Ajout au batch
+        batch_ids.append(chunk_id)
+        batch_texts.append(text)
+        batch_embeddings.append(embedding)
+        batch_metadatas.append(metadata)
+
+        # Si batch plein, ajout dans ChromaDB
+        if len(batch_ids) >= BATCH_SIZE:
+            collection.add(
+                ids=batch_ids,
+                documents=batch_texts,
+                embeddings=batch_embeddings,
+                metadatas=batch_metadatas
+            )
+            print(f"[Info] {len(batch_ids)} chunks ajoutés dans la collection.")
+            batch_ids, batch_texts, batch_embeddings, batch_metadatas = [], [], [], []
+
+    # Ajouter le reste
+    if batch_ids:
+        collection.add(
+            ids=batch_ids,
+            documents=batch_texts,
+            embeddings=batch_embeddings,
+            metadatas=batch_metadatas
+        )
+        print(f"[Info] {len(batch_ids)} derniers chunks ajoutés dans la collection.")
+
+# ==============================
+# Exécution principale
+# ==============================
+if __name__ == "__main__":
+    print("[Info] Lecture du CSV...")
+    df = pd.read_csv(CSV_PATH)
+
+    print("[Info] Connexion à ChromaDB...")
+    client = PersistentClient(path=PERSIST_DIR)
+
+    print("[Info] Ajout des chunks dans la collection...")
+    add_chunks_to_chroma(df, client, COLLECTION_NAME)
+
+    print("[Info] Tous les chunks ont été ajoutés avec succès.")

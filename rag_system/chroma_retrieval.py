@@ -16,3 +16,8 @@ def get_context_from_chroma(user_text: str, n_results: int = 5) -> str:
     results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
     context_chunks = results["documents"][0]
     return " ".join(context_chunks)
+
+
+
+
+

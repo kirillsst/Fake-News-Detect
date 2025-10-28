@@ -1,55 +1,34 @@
-# chroma_utils.py
+import ollama
 import numpy as np
-from ollama._client import Client as OllamaClient
 
-# Client Ollama unique pour toute l'application
-ollama_client = OllamaClient()
+def chunk_text(text, max_words=130):
+    words = text.split()
+    return [" ".join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
 
-def normalize_vector(vec):
+def get_embedding(text, model="all-minilm"):
     """
-    Normalise un vecteur : norme = 1.
-    Cela est important pour le cosine similarity et la recherche.
+    Récupère l'embeddage du texte. 
+    Si le texte est trop long, il le divise en morceaux et calcule la moyenne des embeddages.
     """
-    vec = np.array(vec, dtype=float)
-    norm = np.linalg.norm(vec)
-    if norm == 0:
-        return vec
-    return vec / norm
-
-def get_embedding(text: str, model: str = "all-minilm", max_words: int = 100):
-    """
-    Génère l'embedding via Ollama et le normalise.
-    Limite la longueur du texte pour le modèle.
-    """
-    try:
-        # Limiter le texte par nombre de mots
-        words = text.split()
-        if len(words) > max_words:
-            words = words[:max_words]
-            text = " ".join(words)
-            print(f"[Warning] Texte tronqué à {max_words} mots pour l'embedding.")
-
-        # Appel au modèle Ollama
-        response = ollama_client.embeddings(model=model, prompt=text)
-        embedding = response.get("embedding", None)
-
-        if embedding is None:
-            print("[Warning] Ollama a retourné None pour l'embedding.")
-            return None
-
-        # Normalisation du vecteur
-        return normalize_vector(embedding)
-
-    except Exception as e:
-        print(f"[Error] Échec de génération d'embedding : {e}")
+    text = text.strip()
+    if not text:
         return None
 
-def cosine_similarity(vec_a, vec_b):
-    """
-    Calcule la similarité cosinus entre deux vecteurs.
-    """
-    vec_a = np.array(vec_a, dtype=float)
-    vec_b = np.array(vec_b, dtype=float)
-    if np.linalg.norm(vec_a) == 0 or np.linalg.norm(vec_b) == 0:
-        return 0.0
-    return np.dot(vec_a, vec_b) / (np.linalg.norm(vec_a) * np.linalg.norm(vec_b))
+    chunks = chunk_text(text, max_words=150)
+    embeddings = []
+
+    for chunk in chunks:
+        try:
+            response = ollama.embeddings(model=model, prompt=chunk)
+            emb = response.get("embedding")
+            if emb:
+                embeddings.append(emb)
+        except Exception as e:
+            print(f"[Warning] Erreur lors du traitement du chunk : {e}")
+
+    if not embeddings:
+        return None
+
+    # nous calculons la moyenne de tous les segments dans un seul vecteur
+    avg_embedding = np.mean(np.array(embeddings), axis=0).tolist()
+    return avg_embedding

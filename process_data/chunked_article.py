@@ -3,7 +3,7 @@ from .article_processor import ArticleProcessor
 
 
 class ChunkedArticle(ArticleProcessor):
-    def __init__(self, text, label=None, chunk_size=100, overlap=50):
+    def __init__(self, text, label=None, chunk_size=120, overlap=50):
         super().__init__(text, label)
         self.chunk_size = chunk_size
         self.overlap = overlap

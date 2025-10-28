@@ -1,9 +1,9 @@
 import ollama
 import numpy as np
 
-def chunk_text(text, max_length=500):
-    # Divise un texte long en morceaux de longueur fixe
-    return [text[i:i + max_length] for i in range(0, len(text), max_length)]
+def chunk_text(text, max_words=130):
+    words = text.split()
+    return [" ".join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
 
 def get_embedding(text, model="all-minilm"):
     """
@@ -14,7 +14,7 @@ def get_embedding(text, model="all-minilm"):
     if not text:
         return None
 
-    chunks = chunk_text(text, 1000)
+    chunks = chunk_text(text, 150)
     embeddings = []
 
     for chunk in chunks:
