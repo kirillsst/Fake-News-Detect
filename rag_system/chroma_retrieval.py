@@ -1,23 +1,44 @@
-
 from chromadb import PersistentClient
 from database.chroma_utils import get_embedding
 
+# Constantes
 CSV_PATH = "data/processed/chunks.csv"
 CHROMA_DB_PATH = "./chroma_db"
 COLLECTION_NAME = "fake_news_collection"
 
+
 def get_context_from_chroma(user_text: str, n_results: int = 5) -> str:
     """
-    Récupère l'intégration de la requête, recherche les chunks les plus proches et renvoie le contexte combiné.
+    Récupère l'embedding de la requête utilisateur, 
+    recherche les chunks les plus proches dans ChromaDB
+    et renvoie un contexte combiné.
     """
-    query_embedding = get_embedding(user_text)
-    client = PersistentClient(path=CHROMA_DB_PATH)
-    collection = client.get_collection(COLLECTION_NAME)
-    results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
-    context_chunks = results["documents"][0]
-    return " ".join(context_chunks)
+    try:
+        #  Calcul de l'embedding du texte utilisateur
+        query_embedding = get_embedding(user_text)
 
+        #  Connexion à la base Chroma persistante
+        client = PersistentClient(path=CHROMA_DB_PATH)
+        collection = client.get_collection(COLLECTION_NAME)
 
+        #  Recherche des chunks les plus proches
+        results = collection.query(
+            query_embeddings=[query_embedding],
+            n_results=n_results
+        )
 
+        #  Récupération des documents (chunks)
+        context_chunks = results.get("documents", [[]])[0]
 
+        if not context_chunks:
+            print(" Aucun contexte pertinent trouvé dans ChromaDB.")
+            return ""
 
+        print(f" {len(context_chunks)} chunks récupérés depuis ChromaDB.")
+
+        #  Fusion propre du contexte
+        return "\n---\n".join(context_chunks)
+
+    except Exception as e:
+        print(f" Erreur lors de la recherche Chroma : {e}")
+        return ""
