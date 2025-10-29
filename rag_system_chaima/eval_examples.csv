@@ -1,0 +1,6 @@
+article_id,chunk_id,text,label
+0,0,donald trump just couldn t wish all americans a happy new year and leave it at that ... only trump,Fake
+0,1,year . 2018 will be a great year for america ! ... who use the word hater in a new years wish ?,Fake
+0,2,"alan sandoval alansandoval13 december 31 , 2017 ... his filter have be break down",Fake
+98,1,which be grapple with wild fire ... fema have so far approve more than 660 million in aid,True
+98,2,say they fear will hurt the commonwealth ... rossello on monday order an official review of the death toll,True
