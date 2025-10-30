@@ -1,44 +1,45 @@
 import ollama
 
-MODEL_NAME = "phi3:mini"
-
-def generate_response(clean_text: str, context_text: str) -> str:
+def generate_response(user_text: str, context_text: str, context_metadatas: list) -> str:
     """
-    Formule une invite stricte et appelle Ollama pour analyser le texte.
-    Retourne le verdict (TRUE/FAKE) et l'explication.
+    Génère une réponse à partir du texte utilisateur et du contexte récupéré via Chroma.
+    Le modèle doit retourner un format strictement conforme pour être analysé correctement.
     """
     prompt = f"""
-You are a professional fake news detection AI. 
-Your goal is to classify a statement as either TRUE or FAKE based on the provided context.
+Tu es un assistant de vérification de faits (fact-checker).
+Ton rôle est de déterminer si le texte donné est VRAI ou FAUX à partir du contexte.
 
-Rules:
-- If the context clearly supports the statement, answer TRUE.
-- If the context contradicts the statement, answer FAKE.
-- If the context is insufficient, choose the most likely label (TRUE or FAKE) based on the retrieved context.
-- Never answer UNKNOWN or leave it blank.
+Consignes :
+- Analyse attentivement le texte et le contexte.
+- Ne fais aucune supposition sans base factuelle.
+- À la fin de ta réponse, tu dois ABSOLUMENT conclure par une ligne unique au format :
 
+VERDICT: TRUE
+ou
+VERDICT: FAKE
 
-Output format:
-VERDICT: TRUE or FAKE
-EXPLANATION: one short sentence explaining your reasoning.
+- Ne mets rien après cette ligne.
+- Si tu hésites, choisis FAKE (pour éviter les faux positifs).
+- Ajoute une explication claire juste avant le verdict, au format :
 
-User Statement:
-{clean_text}
+EXPLANATION: <raison concise>
 
-Context (related articles):
+Texte utilisateur :
+{user_text}
+
+Contexte :
 {context_text}
+
+Réponds UNIQUEMENT dans ce format exact :
+
+EXPLANATION: <ta réponse ici>
+VERDICT: <TRUE ou FAKE>
 """
 
-    # Appel du modèle Ollama
-    response = ollama.chat(model=MODEL_NAME, messages=[{"role": "user", "content": prompt}])
-    response_text = response["message"]["content"]
+    response = ollama.generate(
+        model="mistral:latest",
+        prompt=prompt,
+        options={"temperature": 0.2}  # faible température = plus de cohérence
+    )
 
-    # Extraction du verdict
-    verdict_line = [line for line in response_text.splitlines() if line.strip().upper().startswith("VERDICT:")]
-    verdict = verdict_line[0].split(":", 1)[1].strip() if verdict_line else "UNKNOWN"
-
-    # Extraction de l'explication
-    explanation_line = [line for line in response_text.splitlines() if line.strip().upper().startswith("EXPLANATION:")]
-    explanation = explanation_line[0].split(":", 1)[1].strip() if explanation_line else ""
-
-    return f"Verdict: {verdict}\nExplanation: {explanation}"
+    return response["response"]
