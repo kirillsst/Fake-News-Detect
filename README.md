@@ -77,15 +77,19 @@ Ce fichier fusionnera les deux sources et contiendra les colonnes suivantes :
 | label            | Classe de l’article : Fake ou True       |
 
 ## 3. Création de la base de données Chroma
-Pour initialiser la base Chroma, exécutez le script suivant :
+Tout se fait désormais en une seule commande via le pipeline principal :
 ```bash
-python database/chroma_setup.py
+python database/chroma_pipeline.py
 ```
+Ce script :
 
-Ensuite, pour insérer les chunks dans votre collection :
-```bash
-python database/chroma_insert.py
-```
+  - lit automatiquement le fichier data/processed/chunks.csv,
+
+  - crée la collection fake_news_collection (si elle n’existe pas),
+
+  - génère les embeddings pour chaque chunk,
+
+  - insère les données dans la base par lots (batch_size=50 par défaut).
 
 Après l’exécution, vérifiez le contenu de la base de données avec :
 ```bash
