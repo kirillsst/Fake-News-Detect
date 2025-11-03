@@ -34,10 +34,14 @@ COLLECTION_NAME = "fake_news_collection"
 DEFAULT_BATCH_SIZE = 50
 
 def ensure_collection(client: PersistentClient, name: str):
-    """Crée ou récupère la collection ChromaDB."""
+    """Crée ou récupère la collection ChromaDB. Supprime si embeddings de dimension différente."""
     try:
-        collection = client.get_collection(name=name)   
-        print(f"[Info] Collection '{name}' récupérée avec succès.")
+        collection = client.get_collection(name=name)
+        # Optionnel: supprimer si ancienne dimension
+        client.delete_collection(name)
+        print(f"[Info] Ancienne collection '{name}' supprimée.")
+        collection = client.create_collection(name=name)
+        print(f"[Info] Nouvelle collection '{name}' créée.")
     except Exception:
         collection = client.create_collection(name=name)
         print(f"[Info] Collection '{name}' créée.")

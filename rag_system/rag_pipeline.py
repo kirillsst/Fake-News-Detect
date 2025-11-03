@@ -3,7 +3,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from rag_system.query_preprocess import preprocess_query
 from rag_system.chroma_retrieval import get_context_from_chroma
-from rag_system.ollama_generation import generate_response
+from rag_system.azure_generation import generate_response
 import time
 
 
@@ -23,7 +23,7 @@ def rag_analyze(user_text: str):
 
     #  3. Génération de la réponse avec Ollama
     ollama_start = time.time()
-    result_text = generate_response(clean_text, context_text)
+    result_text = generate_response(context_text, clean_text)
     print(f" Temps génération Ollama : {time.time() - ollama_start:.2f} sec")
 
     #  4. Temps total
