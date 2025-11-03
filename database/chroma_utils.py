@@ -1,10 +1,21 @@
 # chroma_utils.py
 import os
 import numpy as np
-from ollama._client import Client as OllamaClient
+from dotenv import load_dotenv
+from openai import AzureOpenAI
 
-# Client Ollama unique pour toute l'application
-ollama_client = OllamaClient()
+# Charger les variables du .env
+load_dotenv()
+
+endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+deployment = os.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
+api_key = os.getenv("AZURE_OPENAI_API_KEY")
+
+client = AzureOpenAI(
+    api_key=api_key,
+    azure_endpoint=endpoint,
+    api_version="2024-12-01-preview"
+)
 
 def normalize_vector(vec):
     vec = np.array(vec, dtype=float)
@@ -13,32 +24,24 @@ def normalize_vector(vec):
         return vec
     return vec / norm
 
-def get_embedding(text: str, model: str = "all-minilm", max_words: int = 2000):
+def get_embedding(text: str):
     """
-    Génère l'embedding via Ollama et le normalise.
-    Limite la longueur du texte pour le modèle.
+    Génère l'embedding du texte via Azure OpenAI SDK.
     """
+    if not text or not text.strip():
+        print("[Erreur] Texte vide, impossible de générer un embedding.")
+        return None
+
     try:
-        # Limiter le texte par nombre de mots
-        words = text.split()
-        if len(words) > max_words:
-            words = words[:max_words]
-            text = " ".join(words)
-            print(f"[Warning] Texte tronqué à {max_words} mots pour l'embedding.")
-
-        # Appel au modèle Ollama
-        response = ollama_client.embeddings(model=model, prompt=text)
-        embedding = response.get("embedding", None)
-
-        if embedding is None:
-            print("[Warning] Ollama a retourné None pour l'embedding.")
-            return None
-
-        # Normalisation du vecteur
+        response = client.embeddings.create(
+            model=deployment,  # Utilisation correcte de la variable
+            input=text
+        )
+        embedding = response.data[0].embedding
         return normalize_vector(embedding)
 
     except Exception as e:
-        print(f"[Error] Échec de génération d'embedding : {e}")
+        print(f"[ERREUR EMBEDDING] Impossible de générer l'embedding : {e}")
         return None
 
 def cosine_similarity(vec_a, vec_b):
