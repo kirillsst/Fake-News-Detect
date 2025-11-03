@@ -1,9 +1,13 @@
 # Exemple minimal pour Streamlit + Azure OpenAI
 FROM python:3.11-slim
 
+# Définir le répertoire de travail
 WORKDIR /app
-COPY . /app
 
+# Copier uniquement les fichiers nécessaires d'abord pour le cache pip
+COPY requirements.txt .
+
+# Installer les dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY .env .env

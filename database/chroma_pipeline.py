@@ -1,6 +1,4 @@
-#chroma_pipeline.py: script principal orchestrant la pipeline
 
-# database/chroma_pipeline.py
 """
 Pipeline d'ingestion dans ChromaDB
 - lit data/processed/chunks.csv
