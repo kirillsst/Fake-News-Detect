@@ -22,5 +22,4 @@ COPY . .
 RUN mkdir -p /app/chroma_db && chmod -R 777 /app/chroma_db
 
 # Lancer Streamlit avec la variable PORT Azure
-
 CMD streamlit run interface/app.py --server.port $PORT --server.address 0.0.0.0
