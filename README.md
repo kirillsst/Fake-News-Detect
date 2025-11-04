@@ -102,6 +102,10 @@ Une fois la base configurée, vous pouvez lancer l’interface utilisateur avec 
 ```bash
 streamlit run interface/app.py
 ```
+Terminal :
+```bash
+python rag_system/rag_pipeline.py
+```
 
 Cette interface vous permettra d’entrer un texte et d’obtenir une prédiction au format suivant :
 ```bash
