@@ -116,6 +116,7 @@ Explication : Raisonnement du modèle
 
 ```bash
 ├── README.md
+├── Dockerfile
 ├── chroma_db
 ├── data
 │   ├── processed
@@ -126,9 +127,7 @@ Explication : Raisonnement du modèle
 ├── database
 │   ├── __init__.py
 │   ├── check_db.py
-│   ├── chroma_insert.py
 │   ├── chroma_pipeline.py
-│   ├── chroma_setup.py
 │   └── chroma_utils.py
 ├── interface
 │   └── app.py
@@ -144,10 +143,16 @@ Explication : Raisonnement du modèle
 ├── pyproject.toml
 ├── rag_system
 │   ├── __init__.py
+│   ├── azure_client.py
+│   ├── azure_generation.py
 │   ├── chroma_retrieval.py
-│   ├── ollama_generation.py
 │   ├── query_preprocess.py
 │   └── rag_pipeline.py
+├── tests
+│   ├── pytest.ini
+│   ├── test_articles.py
+│   └── test_pipeline.py
+├── docker-compose.yml
 ├── requirements.txt
 └── uv.lock
 ```
