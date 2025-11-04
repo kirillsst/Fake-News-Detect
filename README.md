@@ -133,6 +133,7 @@ Explication : Raisonnement du modèle
 ├── interface
 │   └── app.py
 ├── notebooks
+|   ├── exploration_chaima.ipynb
 │   └── exploration.ipynb
 ├── process_data 
 │   ├── article_processor.py
