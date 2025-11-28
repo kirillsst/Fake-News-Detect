@@ -18,6 +18,7 @@ import pandas as pd
 import numpy as np
 import chromadb
 from chromadb import PersistentClient
+from chroma_utils import get_embedding
 
 # Essayer d'importer get_embedding depuis chroma_utils, fallback vers embeddings
 try:

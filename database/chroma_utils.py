@@ -8,7 +8,7 @@ from openai import AzureOpenAI
 load_dotenv()
 
 endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-deployment = os.getenv("AZURE_OPENAI_EMBEDDING_MODEL")
+deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
 
 client = AzureOpenAI(
