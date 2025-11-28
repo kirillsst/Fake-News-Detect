@@ -6,8 +6,9 @@ services:
     container_name: fake-news-app
     ports:
       - "8501:8501"
-    environment:
-      - AZURE_API_KEY=${AZURE_API_KEY}
-      - AZURE_ENDPOINT=${AZURE_ENDPOINT}
-      - AZURE_API_VERSION=${AZURE_API_VERSION}
+    env_file:
+      - database/.env
+      - rag_system/.env
+    volumes:
+      - ./chroma_db:/app/chroma_db
     restart: unless-stopped
